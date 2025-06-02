@@ -81,4 +81,9 @@
             line-height: 24px;
         }
     }
+
+.ldap-help-text-hover-tooltip.tooltipContainer {
+    max-width: 400px; // Wider than the default 220px to accommodate detailed help text
+    text-align: left; // Left-align for better readability of longer text
+    white-space: pre-line; // Preserve line breaks in help text
 }
