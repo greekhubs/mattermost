@@ -252,6 +252,11 @@ const (
 	GoogleSettingsDefaultTokenEndpoint   = "https://www.googleapis.com/oauth2/v4/token"
 	GoogleSettingsDefaultUserAPIEndpoint = "https://people.googleapis.com/v1/people/me?personFields=names,emailAddresses,nicknames,metadata"
 
+	GoogleOAuthDefaultAuthURL      = "https://accounts.google.com/o/oauth2/v2/auth"
+	GoogleOAuthDefaultTokenURL     = "https://oauth2.googleapis.com/token"
+	GoogleOAuthDefaultUserInfoURL  = "https://www.googleapis.com/oauth2/v3/userinfo"
+	GoogleOAuthDefaultScopes       = "profile email"
+
 	Office365SettingsDefaultScope           = "User.Read"
 	Office365SettingsDefaultAuthEndpoint    = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
 	Office365SettingsDefaultTokenEndpoint   = "https://login.microsoftonline.com/common/oauth2/v2.0/token"
@@ -1141,16 +1146,22 @@ func (s *AnalyticsSettings) SetDefaults() {
 }
 
 type SSOSettings struct {
-	Enable            *bool   `access:"authentication_openid"`
-	Secret            *string `access:"authentication_openid"` // telemetry: none
-	Id                *string `access:"authentication_openid"` // telemetry: none
-	Scope             *string `access:"authentication_openid"` // telemetry: none
-	AuthEndpoint      *string `access:"authentication_openid"` // telemetry: none
-	TokenEndpoint     *string `access:"authentication_openid"` // telemetry: none
-	UserAPIEndpoint   *string `access:"authentication_openid"` // telemetry: none
-	DiscoveryEndpoint *string `access:"authentication_openid"` // telemetry: none
-	ButtonText        *string `access:"authentication_openid"` // telemetry: none
-	ButtonColor       *string `access:"authentication_openid"` // telemetry: none
+	Enable                  *bool   `access:"authentication_openid"`
+	Secret                  *string `access:"authentication_openid"` // telemetry: none
+	Id                      *string `access:"authentication_openid"` // telemetry: none
+	Scope                   *string `access:"authentication_openid"` // telemetry: none
+	AuthEndpoint            *string `access:"authentication_openid"` // telemetry: none
+	TokenEndpoint           *string `access:"authentication_openid"` // telemetry: none
+	UserAPIEndpoint         *string `access:"authentication_openid"` // telemetry: none
+	DiscoveryEndpoint       *string `access:"authentication_openid"` // telemetry: none
+	ButtonText              *string `access:"authentication_openid"` // telemetry: none
+	ButtonColor             *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthClientID     *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthClientSecret *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthAuthURL      *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthTokenURL     *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthUserInfoURL  *string `access:"authentication_openid"` // telemetry: none
+	GoogleOAuthScopes       *string `access:"authentication_openid"` // telemetry: none
 }
 
 func (s *SSOSettings) setDefaults(scope, authEndpoint, tokenEndpoint, userAPIEndpoint, buttonColor string) {
@@ -1192,6 +1203,26 @@ func (s *SSOSettings) setDefaults(scope, authEndpoint, tokenEndpoint, userAPIEnd
 
 	if s.ButtonColor == nil {
 		s.ButtonColor = NewPointer(buttonColor)
+	}
+
+	// Set defaults for Google OAuth fields
+	if s.GoogleOAuthClientID == nil {
+		s.GoogleOAuthClientID = NewPointer("")
+	}
+	if s.GoogleOAuthClientSecret == nil {
+		s.GoogleOAuthClientSecret = NewPointer("")
+	}
+	if s.GoogleOAuthAuthURL == nil {
+		s.GoogleOAuthAuthURL = NewPointer(GoogleOAuthDefaultAuthURL)
+	}
+	if s.GoogleOAuthTokenURL == nil {
+		s.GoogleOAuthTokenURL = NewPointer(GoogleOAuthDefaultTokenURL)
+	}
+	if s.GoogleOAuthUserInfoURL == nil {
+		s.GoogleOAuthUserInfoURL = NewPointer(GoogleOAuthDefaultUserInfoURL)
+	}
+	if s.GoogleOAuthScopes == nil {
+		s.GoogleOAuthScopes = NewPointer(GoogleOAuthDefaultScopes)
 	}
 }
 
@@ -3586,6 +3617,7 @@ type Config struct {
 	ThemeSettings               ThemeSettings
 	GitLabSettings              SSOSettings
 	GoogleSettings              SSOSettings
+	GoogleOAuthSettings         SSOSettings
 	Office365Settings           Office365Settings
 	OpenIdSettings              SSOSettings
 	LdapSettings                LdapSettings
@@ -3693,6 +3725,7 @@ func (o *Config) SetDefaults() {
 	o.Office365Settings.setDefaults()
 	o.GitLabSettings.setDefaults("", "", "", "", "")
 	o.GoogleSettings.setDefaults(GoogleSettingsDefaultScope, GoogleSettingsDefaultAuthEndpoint, GoogleSettingsDefaultTokenEndpoint, GoogleSettingsDefaultUserAPIEndpoint, "")
+	o.GoogleOAuthSettings.setDefaults(GoogleOAuthDefaultScopes, GoogleOAuthDefaultAuthURL, GoogleOAuthDefaultTokenURL, GoogleOAuthDefaultUserInfoURL, "")
 	o.OpenIdSettings.setDefaults(OpenidSettingsDefaultScope, "", "", "", "#145DBF")
 	o.ServiceSettings.SetDefaults(isUpdate)
 	o.PasswordSettings.SetDefaults()

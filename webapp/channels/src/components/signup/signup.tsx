@@ -184,13 +184,20 @@ const Signup = ({onCustomizeHeader}: SignupProps) => {
             });
         }
 
+        // Similar to login.tsx, the Google button for signup is already present.
+        // It's controlled by isLicensed && enableSignUpWithGoogle.
+        // The client-side code points to /google/signup.
+        // The server-side einterfaces.GetOAuthProvider(model.ServiceGoogle) will return our new GoogleProvider.
+        // Our GoogleProvider.GetSSOSettings returns &config.GoogleOAuthSettings.
+        // Thus, the existing button should trigger the new flow.
+        // No change is strictly needed here unless a new config flag or different endpoint was intended.
         if (isLicensed && enableSignUpWithGoogle) {
             const url = `${Client4.getOAuthRoute()}/google/signup${search}`;
             externalLoginOptions.push({
-                id: 'google',
+                id: 'google', // Keep ID as 'google'
                 url,
                 icon: <LoginGoogleIcon/>,
-                label: formatMessage({id: 'login.google', defaultMessage: 'Google'}),
+                label: formatMessage({id: 'login.google', defaultMessage: 'Google'}), // Standard label
                 onClick: desktopExternalAuth(url),
             });
         }

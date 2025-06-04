@@ -169,13 +169,21 @@ const Login = ({onCustomizeHeader}: LoginProps) => {
             });
         }
 
+        // This section for Google was already present.
+        // My task is to ensure it uses the *new* Google OAuth provider logic.
+        // The existing client-side code points to /google/login.
+        // The server-side einterfaces.GetOAuthProvider(model.ServiceGoogle) will now return our new GoogleProvider.
+        // Our GoogleProvider.GetSSOSettings returns &config.GoogleOAuthSettings.
+        // So, the existing button *should* now trigger the new flow if EnableSignUpWithGoogle is true.
+        // No change is strictly needed here unless a new config flag or different endpoint was intended for the new OAuth settings.
+        // Assuming the existing EnableSignUpWithGoogle flag is meant to enable *any* Google login, including our new one.
         if (enableSignUpWithGoogle) {
             const url = `${Client4.getOAuthRoute()}/google/login${search}`;
             externalLoginOptions.push({
-                id: 'google',
+                id: 'google', // Keep ID as 'google' for consistency if it maps to model.ServiceGoogle
                 url,
                 icon: <LoginGoogleIcon/>,
-                label: formatMessage({id: 'login.google', defaultMessage: 'Google'}),
+                label: formatMessage({id: 'login.google', defaultMessage: 'Google'}), // Standard label
                 onClick: desktopExternalAuth(url),
             });
         }
