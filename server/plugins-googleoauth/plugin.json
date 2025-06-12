@@ -1,0 +1,12 @@
+{
+    "id": "com.mattermost.google-oauth",
+    "name": "Google OAuth Login",
+    "description": "Login to Mattermost using Google OAuth.",
+    "version": "0.1.0",
+    "min_server_version": "6.2.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/dist/plugin-linux-amd64"
+        }
+    }
+}
